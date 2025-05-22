@@ -34,9 +34,7 @@ class BomberGame extends FlameGame with KeyboardEvents {
 
   @override
   void render(Canvas canvas) {
-    super.render(canvas);
-
-    // Spielfeld zeichnen
+    // 1. Erst das Spielfeld zeichnen
     for (int y = 0; y < map.length; y++) {
       for (int x = 0; x < map[y].length; x++) {
         Rect tileRect = Rect.fromLTWH(x * tileSize, y * tileSize, tileSize, tileSize);
@@ -54,7 +52,11 @@ class BomberGame extends FlameGame with KeyboardEvents {
         canvas.drawRect(tileRect, border);
       }
     }
+
+    // 2. Dann den Spieler und andere Komponenten rendern
+    super.render(canvas);
   }
+
 
   @override
   KeyEventResult onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
