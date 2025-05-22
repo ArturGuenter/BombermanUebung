@@ -69,13 +69,22 @@ class Player extends PositionComponent {
 
   Player(this.tileSize) {
     size = Vector2(tileSize, tileSize);
-    position = Vector2(tileSize, tileSize); // Start im Feld (1,1)
+    position = Vector2(tileSize, tileSize); // Start: (1,1)
+    anchor = Anchor.topLeft;
+    debugMode = true; // <<< zeigt Umriss und Position
   }
 
   @override
   void render(Canvas canvas) {
     final paint = Paint()..color = Colors.blue;
     canvas.drawRect(size.toRect(), paint);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    // Debug-Ausgabe:
+    print('Spieler-Position: $position');
   }
 
   void handleKeyboard(Set<LogicalKeyboardKey> keysPressed) {
@@ -97,3 +106,4 @@ class Player extends PositionComponent {
     position += direction * speed * (1 / 60);
   }
 }
+
