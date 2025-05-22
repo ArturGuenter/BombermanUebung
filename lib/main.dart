@@ -60,7 +60,7 @@ class BomberGame extends FlameGame with KeyboardEvents {
 
   @override
   KeyEventResult onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    player.handleKeyboard(keysPressed);
+    player.handleKeyboard(keysPressed, map);
     return KeyEventResult.handled;
   }
 }
@@ -78,7 +78,8 @@ class Player extends PositionComponent {
 
   @override
   void render(Canvas canvas) {
-    final paint = Paint()..color = Colors.blue;
+    final paint = Paint()
+      ..color = Colors.blue;
     canvas.drawRect(size.toRect(), paint);
   }
 
@@ -89,23 +90,40 @@ class Player extends PositionComponent {
     print('Spieler-Position: $position');
   }
 
-  void handleKeyboard(Set<LogicalKeyboardKey> keysPressed) {
+  void handleKeyboard(Set<LogicalKeyboardKey> keysPressed, List<List<int>> map) {
     Vector2 direction = Vector2.zero();
 
+    // Nur eine Richtung verarbeiten – in fester Reihenfolge
     if (keysPressed.contains(LogicalKeyboardKey.arrowUp)) {
-      direction.y = -1;
+      direction = Vector2(0, -1);
     } else if (keysPressed.contains(LogicalKeyboardKey.arrowDown)) {
-      direction.y = 1;
-    }
-
-    if (keysPressed.contains(LogicalKeyboardKey.arrowLeft)) {
-      direction.x = -1;
+      direction = Vector2(0, 1);
+    } else if (keysPressed.contains(LogicalKeyboardKey.arrowLeft)) {
+      direction = Vector2(-1, 0);
     } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight)) {
-      direction.x = 1;
+      direction = Vector2(1, 0);
     }
 
-    direction.normalize();
-    position += direction * speed * (1 / 60);
+    if (direction == Vector2.zero()) return;
+
+    // Zielposition berechnen
+    Vector2 nextPos = position + direction * tileSize;
+
+    int targetX = (nextPos.x / tileSize).floor();
+    int targetY = (nextPos.y / tileSize).floor();
+
+    // Prüfen ob innerhalb der Map
+    if (targetY >= 0 &&
+        targetY < map.length &&
+        targetX >= 0 &&
+        targetX < map[0].length &&
+        map[targetY][targetX] == 0) {
+      // Bewegung ist erlaubt
+      position += direction * tileSize;
+    } else {
+      print('BLOCKIERT durch Wand oder außerhalb');
+    }
   }
+
 }
 
