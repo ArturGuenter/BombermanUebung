@@ -44,6 +44,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "flame",
+      "rootUri": "file:///Users/arturguenter/.pub-cache/hosted/pub.dev/flame-1.28.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///Users/arturguenter/Flutter%20install%20Folder/flutter/packages/flutter",
       "packageUri": "lib/",
@@ -102,6 +108,12 @@
       "rootUri": "file:///Users/arturguenter/.pub-cache/hosted/pub.dev/meta-1.16.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "ordered_set",
+      "rootUri": "file:///Users/arturguenter/.pub-cache/hosted/pub.dev/ordered_set-7.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
     },
     {
       "name": "path",
@@ -170,7 +182,7 @@
       "languageVersion": "3.7"
     }
   ],
-  "generated": "2025-05-19T20:20:27.971296Z",
+  "generated": "2025-05-22T20:29:25.232959Z",
   "generator": "pub",
   "generatorVersion": "3.7.2",
   "flutterRoot": "file:///Users/arturguenter/Flutter%20install%20Folder/flutter",
