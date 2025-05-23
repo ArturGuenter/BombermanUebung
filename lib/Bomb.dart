@@ -38,29 +38,34 @@ class Bomb extends PositionComponent with HasGameReference<BomberGame> {
     // Zentrum
     game.add(Explosion(position.clone(), tileSize));
 
-    // In vier Richtungen
     for (final dir in [
-      Vector2(1, 0),  // rechts
-      Vector2(-1, 0), // links
-      Vector2(0, 1),  // unten
-      Vector2(0, -1), // oben
+      Vector2(1, 0),
+      Vector2(-1, 0),
+      Vector2(0, 1),
+      Vector2(0, -1),
     ]) {
       final nextX = tileX + dir.x.toInt();
       final nextY = tileY + dir.y.toInt();
 
-      // Wand verhindern (wie map[][] == 1)
       if (nextY >= 0 &&
           nextY < game.map.length &&
           nextX >= 0 &&
-          nextX < game.map[0].length &&
-          game.map[nextY][nextX] == 0) {
+          nextX < game.map[0].length) {
+        final tile = game.map[nextY][nextX];
         final explosionPos = Vector2(nextX * tileSize, nextY * tileSize);
-        game.add(Explosion(explosionPos, tileSize));
+
+        if (tile == 0) {
+          game.add(Explosion(explosionPos, tileSize));
+        } else if (tile == 2) {
+          game.map[nextY][nextX] = 0; // Block zerstören
+          game.add(Explosion(explosionPos, tileSize));
+        }
       }
     }
 
-    removeFromParent(); // Bombe selbst verschwindet
+    removeFromParent();
   }
+
 
 }
 

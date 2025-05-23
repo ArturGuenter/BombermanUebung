@@ -17,15 +17,16 @@ class BomberGame extends FlameGame with KeyboardEvents {
   // Spielfeld: 0 = leer, 1 = Wand
   final List<List<int>> map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 2, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 2, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 2, 0, 2, 0, 0, 2, 0, 2, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   ];
+
 
   final double tileSize = 32;
 
@@ -43,7 +44,16 @@ class BomberGame extends FlameGame with KeyboardEvents {
         Rect tileRect = Rect.fromLTWH(x * tileSize, y * tileSize, tileSize, tileSize);
 
         final paint = Paint()
-          ..color = (map[y][x] == 1) ? Colors.grey : Colors.white
+          ..color = () {
+            switch (map[y][x]) {
+              case 1:
+                return Colors.grey; // Wand
+              case 2:
+                return Colors.brown; // Zerstörbarer Block
+              default:
+                return Colors.white; // Leer
+            }
+          }()
           ..style = PaintingStyle.fill;
 
         canvas.drawRect(tileRect, paint);
@@ -56,7 +66,7 @@ class BomberGame extends FlameGame with KeyboardEvents {
       }
     }
 
-    // 2. Dann den Spieler und andere Komponenten rendern
+
     super.render(canvas);
   }
 
