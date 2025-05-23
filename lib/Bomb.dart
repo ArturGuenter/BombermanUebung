@@ -32,13 +32,41 @@ class Bomb extends PositionComponent with HasGameReference<BomberGame> {
   }
 
   void explode() {
+    final tileX = (position.x / tileSize).floor();
+    final tileY = (position.y / tileSize).floor();
+
+    // Zentrum
     game.add(Explosion(position.clone(), tileSize));
-    removeFromParent();
+
+    // In vier Richtungen
+    for (final dir in [
+      Vector2(1, 0),  // rechts
+      Vector2(-1, 0), // links
+      Vector2(0, 1),  // unten
+      Vector2(0, -1), // oben
+    ]) {
+      final nextX = tileX + dir.x.toInt();
+      final nextY = tileY + dir.y.toInt();
+
+      // Wand verhindern (wie map[][] == 1)
+      if (nextY >= 0 &&
+          nextY < game.map.length &&
+          nextX >= 0 &&
+          nextX < game.map[0].length &&
+          game.map[nextY][nextX] == 0) {
+        final explosionPos = Vector2(nextX * tileSize, nextY * tileSize);
+        game.add(Explosion(explosionPos, tileSize));
+      }
+    }
+
+    removeFromParent(); // Bombe selbst verschwindet
   }
+
 }
 
 class Explosion extends PositionComponent {
   final double tileSize;
+  double _timer = 0.5; // 500ms sichtbar
 
   Explosion(Vector2 position, this.tileSize) {
     this.position = position;
@@ -47,19 +75,16 @@ class Explosion extends PositionComponent {
   }
 
   @override
-  Future<void> onLoad() async {
-    await Future.delayed(Duration(milliseconds: 500));
-    removeFromParent(); // Explosion nur kurz sichtbar
+  void update(double dt) {
+    _timer -= dt;
+    if (_timer <= 0) {
+      removeFromParent();
+    }
   }
 
   @override
   void render(Canvas canvas) {
-    final paint = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 4;
-
-    canvas.drawLine(Offset(0, 0), Offset(size.x, size.y), paint);
-    canvas.drawLine(Offset(size.x, 0), Offset(0, size.y), paint);
+    final paint = Paint()..color = Colors.orange;
+    canvas.drawRect(size.toRect(), paint);
   }
-
 }
