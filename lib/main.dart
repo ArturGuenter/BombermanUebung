@@ -4,6 +4,9 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'Bomb.dart';
+
+
 void main() {
   runApp(GameWidget(game: BomberGame()));
 }
@@ -84,6 +87,18 @@ class Player extends PositionComponent with HasGameReference<BomberGame> {
     canvas.drawRect(size.toRect(), paint);
   }
 
+  void placeBomb() {
+    final pos = Vector2(
+      (position.x / tileSize).floor() * tileSize,
+      (position.y / tileSize).floor() * tileSize,
+    );
+
+    final bomb = Bomb(pos, tileSize);
+    game.add(bomb);
+  }
+
+
+
   @override
   void update(double dt) {
     super.update(dt);
@@ -129,48 +144,11 @@ class Player extends PositionComponent with HasGameReference<BomberGame> {
     }
   }
 
-  void placeBomb() {
-    final pos = Vector2(
-      (position.x / tileSize).floor() * tileSize,
-      (position.y / tileSize).floor() * tileSize,
-    );
 
-    final bomb = Bomb(tileSize, pos);
-    game.add(bomb);
-  }
 
 
 }
 
-class Bomb extends PositionComponent with HasGameRef<BomberGame> {
-  final double tileSize;
 
-  Bomb(this.tileSize, Vector2 position) {
-    size = Vector2(tileSize, tileSize);
-    this.position = position;
-    anchor = Anchor.topLeft;
-  }
-
-  @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-    // Nach 2 Sekunden: Explosion auslösen und Bombe entfernen
-    Future.delayed(Duration(seconds: 2), () {
-      explode();
-      removeFromParent();
-    });
-  }
-
-  @override
-  void render(Canvas canvas) {
-    final paint = Paint()..color = Colors.red;
-    canvas.drawRect(size.toRect(), paint);
-  }
-
-  void explode() {
-    print('💥 BOOM!');
-    // Später: Explosion sichtbar machen + Schaden + Zerstörung
-  }
-}
 
 
